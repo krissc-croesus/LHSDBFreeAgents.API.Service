@@ -1,6 +1,6 @@
 # LHSDB Free Agents API
 
-This project is a .NET 8 Web API designed to manage players and offers for the LHSDB fantasy hockey league. It uses Amazon DynamoDB for data storage and AWS Cognito for user authentication.
+This project is an ASP.NET Core (.NET 10) Web API designed to manage players and offers for the LHSDB fantasy hockey league. It uses Amazon DynamoDB for data storage and AWS Cognito for user authentication.
 
 ## Features
 
@@ -15,8 +15,8 @@ This project is a .NET 8 Web API designed to manage players and offers for the L
 
 ## Technology Stack
 
-- **Framework:** ASP.NET Core 8.0
-- **Database:** Amazon DynamoDB
+- **Framework:** ASP.NET Core on .NET 10 (`net10.0`)
+- **Database:** Amazon DynamoDB (region `us-east-2`)
 - **Authentication:** AWS Cognito (using JWT)
 - **Deployment:** AWS Elastic Beanstalk
 
@@ -55,7 +55,7 @@ All endpoints are protected and require authentication.
 ## Local Setup & Configuration
 
 1.  **Prerequisites:**
-    - .NET 8 SDK
+    - .NET 10 SDK
     - AWS Account
     - AWS CLI configured with credentials
 
@@ -70,7 +70,11 @@ All endpoints are protected and require authentication.
     ```
 
 3.  **Running the Application:**
-    You can run the project using Visual Studio or the .NET CLI. The application will be available at `https://localhost:5001` and `http://localhost:5000` as configured in `Properties/launchSettings.json`.
+    Run the project using Visual Studio, or the .NET CLI from the repo root:
+    ```bash
+    dotnet run --project LHSDBFreeAgentsAPI
+    ```
+    The application will be available at `https://localhost:5001` and `http://localhost:5000` as configured in `Properties/launchSettings.json`.
 
 ## Deployment
 

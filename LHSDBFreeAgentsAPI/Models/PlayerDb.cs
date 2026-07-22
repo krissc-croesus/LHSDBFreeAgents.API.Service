@@ -9,9 +9,10 @@ namespace LHSDBFreeAgentsAPI.Models
         [DynamoDBHashKey]
         public int UniqueID { get; set; }
 
-        [DynamoDBGlobalSecondaryIndexHashKey]
         public string Name { get; set; }
         public string URLLink { get; set; }
+
+        [DynamoDBGlobalSecondaryIndexHashKey]
         public int Team { get; set; }
         public string AgeDate { get; set; }
         public bool PosC { get; set; }

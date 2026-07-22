@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 
 namespace LHSDBFreeAgentsAPI
 {
@@ -30,7 +31,7 @@ namespace LHSDBFreeAgentsAPI
         }
 
         public IConfiguration Configuration { get; }
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        private static readonly HttpClient _httpClient = new HttpClient();
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -54,7 +55,7 @@ namespace LHSDBFreeAgentsAPI
                      IssuerSigningKeyResolver = (s, securityToken, identifier, parameters) =>
                      {
                          // Get JsonWebKeySet from AWS
-                         var json = new WebClient().DownloadString(parameters.ValidIssuer + "/.well-known/jwks.json");
+                         var json = _httpClient.GetStringAsync(parameters.ValidIssuer + "/.well-known/jwks.json").GetAwaiter().GetResult();
                          // Serialize the result
                          return JsonConvert.DeserializeObject<JsonWebKeySet>(json).Keys;
                      },

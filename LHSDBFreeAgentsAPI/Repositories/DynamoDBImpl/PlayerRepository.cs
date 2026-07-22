@@ -9,11 +9,13 @@ namespace LHSDBFreeAgentsAPI.Repositories.DynamoDBImpl
 {
     public class PlayerRepository : IPlayerRepository
     {
-        private readonly DynamoDBContext _context;
+        private readonly IDynamoDBContext _context;
 
         public PlayerRepository(IAmazonDynamoDB dynamoDbClient)
         {
-            _context = new DynamoDBContext(dynamoDbClient);
+            _context = new DynamoDBContextBuilder()
+                .WithDynamoDBClient(() => dynamoDbClient)
+                .Build();
         }
 
         public async Task<IEnumerable<PlayerDb>> GetAllTeamPlayers(int teamId, bool faOnly)
@@ -25,7 +27,7 @@ namespace LHSDBFreeAgentsAPI.Repositories.DynamoDBImpl
                 conditions.Add(new ScanCondition("IsFA", ScanOperator.Equal, true));
                 return await _context.ScanAsync<PlayerDb>(conditions).GetRemainingAsync();
             }
-            var config = new DynamoDBOperationConfig
+            var config = new QueryConfig
             {
                 IndexName = "Team-OVK-index",
                 BackwardQuery = true
