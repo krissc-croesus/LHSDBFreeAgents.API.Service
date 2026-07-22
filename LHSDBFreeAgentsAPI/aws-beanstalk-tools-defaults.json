@@ -1,11 +1,14 @@
 
 {
     "region" : "us-east-2",
-    "configuration" : "Debug",
-    "framework"     : "netcoreapp3.1",
+    "configuration" : "Release",
+    "framework"     : "net10.0",
     "self-contained" : false,
     "application"    : "LHSDBFreeAgents2020",
     "environment"    : "Lhsdbfreeagents2020-prod",
+    "solution-stack" : "64bit Amazon Linux 2023 v3.11.3 running .NET 10",
+    "instance-profile" : "aws-elasticbeanstalk-ec2-role",
+    "service-role"     : "aws-elasticbeanstalk-service-role",
     "enable-xray"    : false,
     "enhanced-health-type" : "enhanced",
     "additional-options"   : "",

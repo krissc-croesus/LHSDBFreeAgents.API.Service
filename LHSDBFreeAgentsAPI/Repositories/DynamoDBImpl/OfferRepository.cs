@@ -12,11 +12,13 @@ namespace LHSDBFreeAgentsAPI.Repositories.DynamoDBImpl
 {
     public class OfferRepository : IOfferRepository
     {
-        private readonly DynamoDBContext _context;
+        private readonly IDynamoDBContext _context;
 
         public OfferRepository(IAmazonDynamoDB dynamoDbClient)
         {
-            _context = new DynamoDBContext(dynamoDbClient);
+            _context = new DynamoDBContextBuilder()
+                .WithDynamoDBClient(() => dynamoDbClient)
+                .Build();
         }
 
         public async Task CreateNewOffer(OfferDb newOffer)
@@ -33,10 +35,9 @@ namespace LHSDBFreeAgentsAPI.Repositories.DynamoDBImpl
 
         public async Task<IEnumerable<OfferDb>> GetAllOffersByTeam(int teamId)
         {
-            var config = new DynamoDBOperationConfig
+            var config = new QueryConfig
             {
-                IndexName = "TeamID-index",
-                BackwardQuery = true
+                IndexName = "TeamID-index"
             };
 
             return await _context.QueryAsync<OfferDb>(teamId, config).GetRemainingAsync();
@@ -49,7 +50,7 @@ namespace LHSDBFreeAgentsAPI.Repositories.DynamoDBImpl
 
         public async Task DeleteOffer(string username, int offerHashKey)
         {
-            var config = new DynamoDBOperationConfig
+            var config = new QueryConfig
             {
                 IndexName = "PlayerID-OfferedBy-index",
                 QueryFilter = new List<ScanCondition>()
