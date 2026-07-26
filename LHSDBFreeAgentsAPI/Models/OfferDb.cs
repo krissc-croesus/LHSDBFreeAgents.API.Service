@@ -7,9 +7,11 @@ namespace LHSDBFreeAgentsAPI.Models
     public class OfferDb
     {
         [DynamoDBHashKey]
+        [DynamoDBGlobalSecondaryIndexHashKey("PlayerID-OfferedBy-index")]
         public int PlayerID { get; set; }
-        [DynamoDBGlobalSecondaryIndexHashKey]
+        [DynamoDBGlobalSecondaryIndexHashKey("TeamID-index")]
         public int TeamID { get; set; }
+        [DynamoDBGlobalSecondaryIndexRangeKey("PlayerID-OfferedBy-index")]
         public string OfferedBy { get; set; }
         public bool IsOwner { get; set; }
         public int Amount { get; set; }

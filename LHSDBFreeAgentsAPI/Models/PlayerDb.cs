@@ -12,7 +12,7 @@ namespace LHSDBFreeAgentsAPI.Models
         public string Name { get; set; }
         public string URLLink { get; set; }
 
-        [DynamoDBGlobalSecondaryIndexHashKey]
+        [DynamoDBGlobalSecondaryIndexHashKey("Team-OVK-index")]
         public int Team { get; set; }
         public string AgeDate { get; set; }
         public bool PosC { get; set; }
@@ -47,6 +47,7 @@ namespace LHSDBFreeAgentsAPI.Models
         public int RT { get; set; }
 
         // Calculated attributes
+        [DynamoDBGlobalSecondaryIndexRangeKey("Team-OVK-index")]
         public int OVK { get; set; }
         public string Position { get; set; }
 
