@@ -9,6 +9,7 @@ namespace LHSDBFreeAgentsAPI.Models
         [DynamoDBHashKey]
         [DynamoDBGlobalSecondaryIndexHashKey("PlayerID-OfferedBy-index")]
         public int PlayerID { get; set; }
+        [DynamoDBRangeKey]
         [DynamoDBGlobalSecondaryIndexHashKey("TeamID-index")]
         public int TeamID { get; set; }
         [DynamoDBGlobalSecondaryIndexRangeKey("PlayerID-OfferedBy-index")]

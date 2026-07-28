@@ -19,16 +19,16 @@ namespace LHSDBFreeAgentsAPI.Services
             this._mapper = mapper;
         }
 
-        public void CreateNewOffer(OfferModel model)
+        public async Task CreateNewOffer(OfferModel model)
         {
             OfferDb newOffer = this._mapper.ToOfferDbModel(model);
 
-            this._offerRepository.CreateNewOffer(newOffer);
+            await this._offerRepository.CreateNewOffer(newOffer);
         }
 
-        public void DeleteOffer(string username, int offerId)
+        public async Task DeleteOffer(string username, int offerId)
         {
-            this._offerRepository.DeleteOffer(username, offerId);
+            await this._offerRepository.DeleteOffer(username, offerId);
         }
 
         public async Task<IEnumerable<OfferModel>> GetAllOffersByTeam(int teamId)

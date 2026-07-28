@@ -6,8 +6,8 @@ namespace LHSDBFreeAgentsAPI.Services
 {
     public interface IOfferService
     {
-        public void CreateNewOffer(OfferModel model);
-        public void DeleteOffer(string username, int offerId);
+        public Task CreateNewOffer(OfferModel model);
+        public Task DeleteOffer(string username, int offerId);
         public Task<IEnumerable<OfferModel>> GetAllOffersByTeam(int teamId);
         public Task<IEnumerable<OfferModel>> GetAllOffersToPlayer(int playerId);
     }

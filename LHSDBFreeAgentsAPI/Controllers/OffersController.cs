@@ -28,7 +28,7 @@ namespace LHSDBFreeAgentsAPI.Controllers
 
         // POST /offers
         [HttpPost]
-        public IActionResult CreateOffer(OfferModel value)
+        public async Task<IActionResult> CreateOffer(OfferModel value)
         {
             if (value == null)
             {
@@ -43,7 +43,7 @@ namespace LHSDBFreeAgentsAPI.Controllers
 
             try
             {
-                _offerService.CreateNewOffer(value);
+                await _offerService.CreateNewOffer(value);
             }
             catch (Exception e)
             {
@@ -55,12 +55,12 @@ namespace LHSDBFreeAgentsAPI.Controllers
 
         [HttpDelete]
         [Route("{offerId}")]
-        public IActionResult DeleteOffer(int offerId)
+        public async Task<IActionResult> DeleteOffer(int offerId)
         {
             string username = this.User.FindFirst("username").Value;
             try
             {
-                _offerService.DeleteOffer(username, offerId);
+                await _offerService.DeleteOffer(username, offerId);
             }
             catch (Exception e)
             {
