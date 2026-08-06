@@ -20,7 +20,7 @@ dotnet run --project LHSDBFreeAgentsAPI    # serves https://localhost:5001 and h
 
 - Default launch profile sets `ASPNETCORE_ENVIRONMENT=Development` and opens `/players`.
 - There is **no test project** in this repo — do not assume a `dotnet test` target exists.
-- Deploy is to AWS Elastic Beanstalk via the AWS Toolkit / `dotnet eb deploy-environment` using `LHSDBFreeAgentsAPI/aws-beanstalk-tools-defaults.json` (app `LHSDBFreeAgents2020`, env `Lhsdbfreeagents2020-prod`, region `us-east-2`, nginx proxy). The `framework` key there must match the csproj `TargetFramework` (`net10.0`), and the target Beanstalk platform must offer a .NET 10 runtime (or deploy `--self-contained`).
+- Deploy is to AWS Elastic Beanstalk via the AWS Toolkit / `dotnet eb deploy-environment` using `LHSDBFreeAgentsAPI/aws-beanstalk-tools-defaults.json` (app `LHSDBFreeAgents2020`, env `Lhsdbfreeagents2020-prod`, region `us-east-2`, nginx proxy). Note the `environment` key there is **stale**: the live environment is `Lhsdbfreeagents2020-prod-lb`, so `dotnet eb deploy-environment` fails with `No Environment found` until it is corrected. The `framework` key there must match the csproj `TargetFramework` (`net10.0`), and the target Beanstalk platform must offer a .NET 10 runtime (or deploy `--self-contained`).
 
 ## Architecture
 
@@ -47,6 +47,16 @@ Table/index names are string literals in the repositories and must match the liv
 - Controllers read the caller's identity from the custom `"username"` claim (`User.FindFirst("username").Value`), not the standard name claim. Offer create/delete enforce that the offer's `OfferedBy` matches this claim.
 - An `"Admin"` authorization policy exists requiring claim `custom:isAdmin == "1"` (defined but not yet applied to endpoints).
 - CORS allows a fixed origin list (localhost:4200 + the piriwin.com hosts) in `Startup`. Add new front-end origins there.
+
+## TLS certificate (manual renewal — read before touching the load balancer)
+
+The HTTPS listener is served by a **Let's Encrypt certificate imported into ACM**, not an ACM-issued one, and it **does not auto-renew**. Certificates last 90 days; the one installed 2026-08-06 expires **2026-11-04**.
+
+`piriwin.com` carries a CAA record `0 issue "letsencrypt.org"` injected by the DNS host (n0c/WHC) at the server level — it is invisible in their zone editor and only their support can change it. Amazon is therefore not authorised to issue for the domain: every ACM request returns `CAA_ERROR`. Do not suggest requesting or renewing an ACM certificate for any `piriwin.com` host until that record changes.
+
+Renew with `scripts/renew-api-cert.py`, which issues via an ACME HTTP-01 challenge answered by a temporary fixed-response rule on the ALB's `:80` listener (no DNS record, no hosting-panel access needed) and re-imports onto the same ACM ARN so the listener is never touched. Consequence: **the `:80` listener must stay enabled**, or renewal breaks.
+
+Full procedure, failure modes and the permanent fix: `docs/tls-certificate.md`.
 
 ## Gotchas
 
